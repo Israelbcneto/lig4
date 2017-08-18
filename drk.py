@@ -17,19 +17,29 @@ def criarMatriz(matriz, linha):
     return (matriz)
 
 def escolheColuna(player,ultPeca):
-    if voltar == True:                      #Aqui só entra se o usuário digitar uma coluna inválida
-        if ultPeca == PECA1:
-            player = PECA1
-        if ultPeca == PECA2:
-            player = PECA2
-    if player == PECA1:                                                                    #Aqui entra quando o player é X, ou seja, na primeira rodada do jogo
-            coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
-            player = PECA2                                                                 #Aqui o player muda pra O
-            ultPeca = PECA1                                                                #Aqui é a variável que indica se o último jogador foi X ou O
-    else:                                                                                  #Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
-            coluna = int(input("Player 2, escolha a coluna para seu próximo movimento: "))
-            player = PECA1                                                                 #Aqui o player muda pra X
-            ultPeca = PECA2                                                                #Aqui é a variável que indica se o último jogador foi X ou O
+    while True:
+        if voltar == True:                      #Aqui só entra se o usuário digitar uma coluna inválida
+            if ultPeca == PECA1:
+                player = PECA1
+            if ultPeca == PECA2:
+                player = PECA2
+        if player == PECA1:                                                                    #Aqui entra quando o player é X, ou seja, na primeira rodada do jogo
+            try:
+                coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
+                player = PECA2                                                                 #Aqui o player muda pra O
+                ultPeca = PECA1                                                                #Aqui é a variável que indica se o último jogador foi X ou O
+                break
+            except ValueError:
+                print("coluna invalida, escolha outra")
+        else:                                                                                  #Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
+            try:
+                coluna = int(input("Player 2, escolha a coluna para seu próximo movimento: "))
+                player = PECA1                                                                 #Aqui o player muda pra X
+                ultPeca = PECA2                                                                #Aqui é a variável que indica se o último jogador foi X ou O
+                break
+            except ValueError:
+                print("coluna invalida, escolha outra")
+
     return coluna, ultPeca, player
 
 def printar_matriz(LINHA, matriz):
@@ -52,22 +62,22 @@ def definir_linha():
     while(True):
         try:
             LINHA = int(input("Digite o numero desejado de linhas: "))
-            while (LINHA <1):
-                LINHA = int(input("Numero incorreto de linhas, escolha outro: "))
+            while (LINHA < 4):
+                LINHA = int(input("Numero inválido de linhas, escolha outro (sendo ele maior que 4): "))
             break
         except ValueError:
-            print("Numero incorreto de linhas, escolha outro. ")
+            print("Numero inválido de linhas, escolha outro. ")
     return LINHA
 
 def definir_coluna():
     while(True):
         try:
-            COLUNA = int(input("Digite o numero desejado de colunas: "))
-            while (COLUNA <1):
-                COLUNA = int(input("Numero incorreto de colunas, escolha outro: "))
+            COLUNA = int(input("Digite o numero desejado de colunas (sendo ele maior que 4): "))
+            while (COLUNA < 4):
+                COLUNA = int(input("Numero inválido de colunas, escolha outro: "))
             break
         except ValueError:
-                print("Numero incorreto de colunas, escolha outro. ")
+                print("Numero inválido de colunas, escolha outro. ")
     return COLUNA
 
 COLUNA = definir_coluna()
