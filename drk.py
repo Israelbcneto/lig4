@@ -7,7 +7,6 @@ linha = []
 voltar = False
 ult_peca = PECA2
 player = PECA1 #Aqui o player começa recebendo " X "
-contador_gameover = 0
 
 def criarMatriz(matriz, linha):
     for i in range(LINHA):
@@ -19,7 +18,7 @@ def criarMatriz(matriz, linha):
 
 def escolheColuna(player, ult_peca):
     while True:
-        if voltar == True:                      #Aqui só entra se o usuário digitar uma coluna inválida
+        if voltar == True:                                                                     #Aqui só entra se o usuário digitar uma coluna inválida
             if ult_peca == PECA1:
                 player = PECA1
             if ult_peca == PECA2:
@@ -28,7 +27,7 @@ def escolheColuna(player, ult_peca):
             try:
                 coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
                 player = PECA2                                                                 #Aqui o player muda pra O
-                ult_peca = PECA1                                                                #Aqui é a variável que indica se o último jogador foi X ou O
+                ult_peca = PECA1                                                               #Aqui é a variável que indica se o último jogador foi X ou O
                 break
             except ValueError:
                 print("coluna invalida, escolha outra")
@@ -46,9 +45,7 @@ def escolheColuna(player, ult_peca):
 def printar_matriz(LINHA, matriz):
     for i in range(LINHA):
         print(matriz[i])
-
 def jogar(matriz, pos_preenchidas, coluna):
-    matriz = criarMatriz(matriz, linha)
     if pos_preenchidas <0:
         print("Coluna cheia, escolha outra.")
         voltar = True
@@ -81,27 +78,40 @@ def definir_coluna():
                 print("Numero inválido de colunas, escolha outro. ")
     return COLUNA
 
-def fim_de_jogo(matriz, ult_peca, contador_gameover):
+def fim_de_jogo(matriz, player):
+    contador_gameover = 0
     for i in range(len(matriz)):
-        contador_gameover == 0
         for j in range(len(matriz[i])):
-            if matriz[i][j] == ult_peca:
+            if matriz[i][j] == player:
                 contador_gameover += 1
             else:
                 contador_gameover = 0
             if contador_gameover == 4:
-                if player == PECA1:
+                if player == PECA2:
                     print("Player 1 ganhou o jogo!")
                 else:
                     print("Player 2 ganhou o jogo!")
                 quit()
-
+        contador_gameover = 0
+    for i in range(len(matriz)):
+        for j in range(len(matriz[i])):
+            if matriz[j][i] == player:
+                contador_gameover += 1
+            else:
+                contador_gameover = 0
+            if contador_gameover == 4:
+                if player == PECA2:
+                    print("Player 1 ganhou o jogo!")
+                else:
+                    print("Player 2 ganhou o jogo!")
+                quit()
+        contador_gameover = 0
+    
 COLUNA = definir_coluna()
 LINHA = definir_linha()
-
+matriz = criarMatriz(matriz, linha)
 for i in range(COLUNA):
     pos_preenchidas.append(LINHA-1)
-
 while(True):
     coluna, ult_peca, player = escolheColuna(player, ult_peca)
     if coluna < 1 or coluna > COLUNA:
@@ -109,4 +119,4 @@ while(True):
         voltar = True
     else:
         pos_preenchidas[coluna-1],voltar = jogar(matriz, pos_preenchidas[coluna-1],coluna)
-    fim_de_jogo(matriz, ult_peca, contador_gameover)
+    fim_de_jogo(matriz, player)
