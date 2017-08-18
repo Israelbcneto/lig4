@@ -78,10 +78,10 @@ def definir_coluna():
                 print("Numero inválido de colunas, escolha outro. ")
     return COLUNA
 
-def fim_de_jogo(matriz, player):
+def fim_de_jogo(matriz, player, COLUNA, LINHA):
     contador_gameover = 0
-    for i in range(len(matriz)):
-        for j in range(len(matriz[i])):
+    for i in range(LINHA):
+        for j in range(COLUNA):
             if matriz[i][j] == player:
                 contador_gameover += 1
             else:
@@ -93,9 +93,9 @@ def fim_de_jogo(matriz, player):
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
-    for i in range(len(matriz)):
-        for j in range(len(matriz[i])):
-            if matriz[j][i] == player:
+    for t in range(COLUNA):
+        for u in range(LINHA):
+            if matriz[t][u] == player:
                 contador_gameover += 1
             else:
                 contador_gameover = 0
@@ -106,7 +106,7 @@ def fim_de_jogo(matriz, player):
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
-    
+
 COLUNA = definir_coluna()
 LINHA = definir_linha()
 matriz = criarMatriz(matriz, linha)
@@ -119,4 +119,4 @@ while(True):
         voltar = True
     else:
         pos_preenchidas[coluna-1],voltar = jogar(matriz, pos_preenchidas[coluna-1],coluna)
-    fim_de_jogo(matriz, player)
+    fim_de_jogo(matriz, player, COLUNA, LINHA)
