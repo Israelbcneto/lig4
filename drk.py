@@ -35,7 +35,7 @@ def escolheColuna(player, ult_peca):
             try:
                 coluna = int(input("Player 2, escolha a coluna para seu próximo movimento: "))
                 player = PECA1                                                                 #Aqui o player muda pra X
-                ult_peca = PECA2                                                                #Aqui é a variável que indica se o último jogador foi X ou O
+                ult_peca = PECA2                                                               #Aqui é a variável que indica se o último jogador foi X ou O
                 break
             except ValueError:
                 print("coluna invalida, escolha outra")
@@ -95,7 +95,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA):
         contador_gameover = 0
     for t in range(COLUNA):
         for u in range(LINHA):
-            if matriz[t][u] == player:
+            if matriz[u][t] == player:
                 contador_gameover += 1
             else:
                 contador_gameover = 0
@@ -112,6 +112,7 @@ LINHA = definir_linha()
 matriz = criarMatriz(matriz, linha)
 for i in range(COLUNA):
     pos_preenchidas.append(LINHA-1)
+printar_matriz(LINHA, matriz)
 while(True):
     coluna, ult_peca, player = escolheColuna(player, ult_peca)
     if coluna < 1 or coluna > COLUNA:
