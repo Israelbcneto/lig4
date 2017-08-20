@@ -8,6 +8,7 @@ voltar = False
 ult_peca = PECA2
 player = PECA1  # Aqui o player começa recebendo " X "
 a = 0
+b = 0
 contador_gameover = 0
 
 
@@ -56,8 +57,8 @@ def jogar(matriz, pos_preenchidas, coluna):
     if pos_preenchidas < 0:
         print("Coluna cheia, escolha outra.")
         voltar = True
-    elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
-        matriz[pos_preenchidas][coluna - 1] = player
+    elif matriz[pos_preenchidas][coluna-1] == VAZIA:
+        matriz[pos_preenchidas][coluna-1] = player
         printar_matriz(LINHA, matriz)
         voltar = False
         a = pos_preenchidas
@@ -89,9 +90,11 @@ def definir_coluna():
     return COLUNA
 
 
-def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover):
+def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
     contador_gameover = 0
     a = 0
+    b = 0
+    c = 0
     for i in range(LINHA):
         for j in range(COLUNA):
             if matriz[i][j] == player:
@@ -123,7 +126,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
             pos_preenchidas += 1
             coluna += 1
             a += 1
-            if matriz[pos_preenchidas][coluna-1] == player:
+            if matriz[pos_preenchidas][coluna] == player:
                 contador_gameover += 1
             else:
                 break
@@ -135,9 +138,9 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
         while contador_gameover < 3:
             pos_preenchidas -= 1
             coluna -= 1
-            if matriz[pos_preenchidas][coluna-1] == player:
+            c += 1
+            if matriz[pos_preenchidas][coluna] == player:
                 contador_gameover += 1
-                print(contador_gameover)
             else:
                 break
     except Exception:
@@ -148,6 +151,46 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
         else:
             print("Player 2 ganhou o jogo!")
         quit()
+    contador_gameover = 0
+    pos_preenchidas += c
+    coluna += c
+    try:
+        while contador_gameover < 3:
+            pos_preenchidas -= 1                        #diagonal superior direita
+            coluna += 1
+            b += 1
+            if matriz[pos_preenchidas][coluna] == player:
+                contador_gameover += 1
+
+            else:
+                break
+    except Exception:
+        pass
+    coluna -= b
+    pos_preenchidas += b
+    try:
+        while contador_gameover < 3:                        #diagonal inferior esquerda
+            pos_preenchidas += 1
+            coluna -= 1
+            if matriz[pos_preenchidas][coluna] == player:
+                contador_gameover += 1
+            else:
+                break
+    except Exception:
+        pass
+    if contador_gameover == 3:
+        if player == PECA2:
+            print("Player 1 ganhou o jogo!")
+        else:
+            print("Player 2 ganhou o jogo!")
+        quit()
+    cont = 0
+    for i in preenchimento:
+        if i < 0:
+            cont += 1
+        if cont == COLUNA:
+            print("Empatou!!")
+            quit()
     return contador_gameover
 COLUNA = definir_coluna()
 LINHA = definir_linha()
@@ -162,4 +205,4 @@ while (True):
         voltar = True
     else:
         pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna)
-        contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas[coluna - 1]+1,a,contador_gameover)
+        contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1,a,contador_gameover,b,pos_preenchidas)
