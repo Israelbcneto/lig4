@@ -69,9 +69,9 @@ def jogar(matriz, pos_preenchidas, coluna):
 def definir_linha():
     while (True):
         try:
-            LINHA = int(input("Digite o numero desejado de linhas (sendo ele maior ou igual a 4): "))
-            while (LINHA < 4):
-                LINHA = int(input("Numero inválido de linhas, escolha outro (sendo ele maior ou igual a 4): "))
+            LINHA = int(input("Digite o numero desejado de linhas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+            while (LINHA < 4 or LINHA > 10):
+                LINHA = int(input("Numero inválido de linhas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             break
         except ValueError:
             print("Numero inválido de linhas, escolha outro. ")
@@ -81,9 +81,9 @@ def definir_linha():
 def definir_coluna():
     while (True):
         try:
-            COLUNA = int(input("Digite o numero desejado de colunas (sendo ele maior ou igual a 4): "))
-            while (COLUNA < 4):
-                COLUNA = int(input("Numero inválido de colunas, escolha outro (sendo ele maior ou igual a 4): "))
+            COLUNA = int(input("Digite o numero desejado de colunas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+            while (COLUNA < 4 or COLUNA > 10):
+                COLUNA = int(input("Numero inválido de colunas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             break
         except ValueError:
             print("Numero inválido de colunas, escolha outro. ")
@@ -95,7 +95,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
     a = 0
     b = 0
     c = 0
-    for i in range(LINHA):
+    for i in range(LINHA):                                  #LINHA
         for j in range(COLUNA):
             if matriz[i][j] == player:
                 contador_gameover += 1
@@ -108,7 +108,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
-    for t in range(COLUNA):
+    for t in range(COLUNA):                                              #COLUNA
         for u in range(LINHA):
             if matriz[u][t] == player:
                 contador_gameover += 1
@@ -121,7 +121,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
-    try:
+    try:                                                                 #INFERIOR DIREITA
         while contador_gameover < 3:
             pos_preenchidas += 1
             coluna += 1
@@ -134,18 +134,18 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
         pass
     pos_preenchidas -= a
     coluna -= a
-    try:
+    try:                                                                 #superior esquerda
         while contador_gameover < 3:
             pos_preenchidas -= 1
             coluna -= 1
             c += 1
-            if matriz[pos_preenchidas][coluna] == player:
+            if matriz[pos_preenchidas][coluna] == player and pos_preenchidas >= 0:
                 contador_gameover += 1
             else:
                 break
     except Exception:
         pass
-    if contador_gameover == 3:
+    if contador_gameover == 3:                                       #EMPATE
         if player == PECA2:
             print("Player 1 ganhou o jogo!")
         else:
