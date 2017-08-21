@@ -90,11 +90,8 @@ def definir_coluna():
     return COLUNA
 
 
-def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
+def LINHA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
     contador_gameover = 0
-    a = 0
-    b = 0
-    c = 0
     for i in range(LINHA):                                  #LINHA
         for j in range(COLUNA):
             if matriz[i][j] == player:
@@ -107,7 +104,8 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
                 else:
                     print("Player 2 ganhou o jogo!")
                 quit()
-        contador_gameover = 0
+def COLUNA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
+    contador_gameover = 0
     for t in range(COLUNA):                                              #COLUNA
         for u in range(LINHA):
             if matriz[u][t] == player:
@@ -120,7 +118,10 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
                 else:
                     print("Player 2 ganhou o jogo!")
                 quit()
-        contador_gameover = 0
+
+def diagonalIDSE(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento,c):
+    c = 0
+    contador_gameover = 0
     try:                                                                 #INFERIOR DIREITA
         while contador_gameover < 3:
             pos_preenchidas += 1
@@ -145,7 +146,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
                 break
     except Exception:
         pass
-    if contador_gameover == 3:                                       #EMPATE
+    if contador_gameover == 3:
         if player == PECA2:
             print("Player 1 ganhou o jogo!")
         else:
@@ -154,12 +155,14 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
     contador_gameover = 0
     pos_preenchidas += c
     coluna += c
+def diagonalSDIE(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
+    contador_gameover = 0
     try:
         while contador_gameover < 3:
             pos_preenchidas -= 1                        #diagonal superior direita
             coluna += 1
             b += 1
-            if matriz[pos_preenchidas][coluna] == player:
+            if matriz[pos_preenchidas][coluna] == player and pos_preenchidas >= 0:
                 contador_gameover += 1
 
             else:
@@ -172,7 +175,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
         while contador_gameover < 3:                        #diagonal inferior esquerda
             pos_preenchidas += 1
             coluna -= 1
-            if matriz[pos_preenchidas][coluna] == player:
+            if matriz[pos_preenchidas][coluna] == player and coluna >= 0:
                 contador_gameover += 1
             else:
                 break
@@ -184,6 +187,7 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
         else:
             print("Player 2 ganhou o jogo!")
         quit()
+def EMPATE(COLUNA, preenchimento):
     cont = 0
     for i in preenchimento:
         if i < 0:
@@ -192,6 +196,17 @@ def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contad
             print("Empatou!!")
             quit()
     return contador_gameover
+def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas,contador_gameover,preenchimento):
+    contador_gameover = 0
+    a = 0
+    b = 0
+    c = 0
+    LINHA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover, b, pos_preenchidas)
+    COLUNA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover, b, pos_preenchidas)
+    diagonalIDSE(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover, b, pos_preenchidas, c)
+    diagonalSDIE(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover, b, pos_preenchidas)
+    EMPATE(COLUNA, preenchimento)
+
 COLUNA = definir_coluna()
 LINHA = definir_linha()
 matriz = criarMatriz(matriz, linha)
@@ -205,4 +220,4 @@ while (True):
         voltar = True
     else:
         pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna)
-        contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1,a,contador_gameover,b,pos_preenchidas)
+        fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1, contador_gameover, pos_preenchidas)
