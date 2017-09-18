@@ -1,3 +1,8 @@
+import socket
+import sys
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 pos_preenchidas = []
 PECA2 = " X "
 PECA1 = " O "
@@ -9,24 +14,7 @@ ult_peca = PECA2
 player = PECA1  # Aqui o player começa recebendo " X "
 a = 0
 b = 0
-coluna = 1
 contador_gameover = 0
-voltar = False
-from random import *
-import time
-import os
-os.system("cls" if os.name == "nt" else "clear")
-cont = 0
-verificar = 0
-
-def criarMatriz(matriz, linha):
-    for i in range(LINHA):
-        linha = []
-        for j in range(COLUNA):
-            linha.append(VAZIA)
-        matriz.append(linha)
-    return (matriz)
-
 
 def escolheColuna(player, ult_peca):
     while True:
@@ -54,83 +42,29 @@ def escolheColuna(player, ult_peca):
 
     return coluna, ult_peca, player
 
-def escolheColuna_IA(player, ult_peca, voltar,coluna):
-    cont = 0
-    while True:
-        if voltar == True:  # Aqui só entra se o usuário digitar uma coluna inválida
-            if ult_peca == PECA1:
-                player = PECA1
-            if ult_peca == PECA2:
-                player = PECA2
-            voltar = False
-        if player == PECA1:  # Aqui entra quando o player é X, ou seja, na primeira rodada do jogo
-            try:
-                coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
-                player = PECA2  # Aqui o player muda pra O
-                ult_peca = PECA1 # Aqui é a variável que indica se o último jogador foi X ou O
-                voltar = False
-                break
-            except ValueError:
-                print("coluna invalida, escolha outra")
-        else:  # Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
-            try:
-                b = randrange(1,4)
-                if b == 1:
-                    if matriz[coluna+1][pos_preenchidas[coluna-1]] == VAZIA:
-                        coluna = coluna
-                    else:
-                        cont += 1
-                elif b == 2:
-                    if matriz[coluna][pos_preenchidas[coluna-1]+1] == VAZIA:
-                        coluna = coluna + 1
-                elif b == 3:
-                    if matriz[coluna][pos_preenchidas[coluna - 1] - 1] == VAZIA:
-                        coluna -= 1
-                else:
-                    coluna = int(randrange(1, COLUNA + 1))
-            except:
-                coluna = int(randrange(1, COLUNA+1))
-            player = PECA1  # Aqui o player muda pra X
-            ult_peca = PECA2  # Aqui é a variável que indica se o último jogador foi X ou O
-            break
+def criarMatriz(matriz, linha):
+    for i in range(LINHA):
+        linha = []
+        for j in range(COLUNA):
+            linha.append(VAZIA)
+        matriz.append(linha)
+    return (matriz)
+
+def jogar(matriz, pos_preenchidas, coluna):
+    if pos_preenchidas < 0:
+        print("Coluna cheia, escolha outra.")
+        voltar = True
+    elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
+        matriz[pos_preenchidas][coluna - 1] = player
+        printar_matriz(LINHA, matriz)
         voltar = False
-    return coluna, ult_peca, player, voltar
+    else:
+        voltar = False
+    return pos_preenchidas - 1, voltar
 
 def printar_matriz(LINHA, matriz):
     for i in range(LINHA):
         print(matriz[i])
-
-def jogar(matriz, pos_preenchidas, coluna, IA, player,VAZIA,voltar):
-    if voltar == True:
-        escolheColuna_IA(player, ult_peca,voltar,coluna)
-    if IA == "2":
-        if pos_preenchidas < 0:
-            print("Coluna cheia, escolha outra.")
-            voltar = True
-        elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
-            matriz[pos_preenchidas][coluna - 1] = player
-            printar_matriz(LINHA, matriz)
-            voltar = False
-        else:
-            voltar = False
-    elif IA == "1":
-        while (True):
-            try:
-                if pos_preenchidas < 0:
-                    print("Coluna cheia, escolha outra.")
-                    voltar = True
-                elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
-                    matriz[pos_preenchidas][coluna - 1] = player
-                    if player == PECA1:
-                        time.sleep(2)
-
-                        print("Vez da IA:")
-                    printar_matriz(LINHA, matriz)
-                    voltar = False
-                break
-            except Exception:
-                pass
-    return pos_preenchidas - 1, voltar
 
 def definir_linha():
     while (True):
@@ -154,7 +88,6 @@ def definir_coluna():
         except ValueError:
             print("Numero inválido de colunas, escolha outro. ")
     return COLUNA
-
 
 def fim_de_jogo(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, a,contador_gameover,b,preenchimento):
     contador_gameover = 0
@@ -264,31 +197,94 @@ def EMPATE(COLUNA,preenchimento):
         if cont == COLUNA:
             print("Empatou!!")
             quit()
-def escolhe_IA():
-    IA = input("Digite 1 para jogar com a IA e 2 para jogar com 2 players: ")
-    while IA != "1" and IA != "2":
-        IA = input("Numero invalido, digite 1 para jogar com a IA e 2 para jogar com 2 players: ")
-    return IA
+            
 COLUNA = definir_coluna()
 LINHA = definir_linha()
 matriz = criarMatriz(matriz, linha)
-IA = escolhe_IA()
 for i in range(COLUNA):
     pos_preenchidas.append(LINHA - 1)
 printar_matriz(LINHA, matriz)
-while (True):
-    if IA == "2":
+
+resp = int(input("Voce vai jogar online? Digite 1 pra sim e 0 pra nao: "))
+
+if resp:
+    resp = int(input("Voce vai ser o servidor? Digite 1 pra sim e 0 pra nao: "))
+
+    if resp:
+        resp = int(input("Digite a porta (4 digitos): "))
+
+        server_address = ('localhost', resp)
+        sock.bind(server_address)
+
+        sock.listen(1)
+
+        print("Esperando Cliente!")
+        connection, client_address = sock.accept()
+
+        try:
+            while True:
+                data = int(connection.recv(32).decode())
+
+                player, ult_peca = PECA1, PECA2
+
+                pos_preenchidas[data - 1], voltar = jogar(matriz, pos_preenchidas[data - 1], data)
+
+                contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, data-1, pos_preenchidas[data - 1]+1,a,contador_gameover,b,pos_preenchidas)
+
+
+                coluna, ult_peca, player = escolheColuna(PECA1, PECA2)
+
+                while coluna < 1 or coluna > COLUNA:
+                    print("Coluna inexistente, escolha outra.")
+
+                    coluna, ult_peca, player = escolheColuna(PECA1, PECA2)
+
+                pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna)
+
+                connection.send(str(coluna).encode())
+
+                contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1,a,contador_gameover,b,pos_preenchidas)
+
+        finally:
+            connection.close()
+    else:
+        ip = input("Digite o IP do servidor com os pontos: ")
+        porta = int(input("Digite a porta do servidor: "))
+
+        sock = socket.create_connection((ip, porta))
+
+        try:
+            while True:
+                coluna, ult_peca, player = escolheColuna(PECA1, PECA2)
+
+                while coluna < 1 or coluna > COLUNA:
+                    print("Coluna inexistente, escolha outra.")
+
+                    coluna, ult_peca, player = escolheColuna(PECA1, PECA2)
+
+                pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna)
+
+                sock.send(str(coluna).encode())
+                data = sock.recv(32).decode()
+
+                contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1,a,contador_gameover,b,pos_preenchidas)
+
+                data = int(data)
+
+                player, ult_peca = PECA1, PECA2
+
+                pos_preenchidas[data - 1], voltar = jogar(matriz, pos_preenchidas[data - 1], data)
+
+                contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, data-1, pos_preenchidas[data - 1]+1,a,contador_gameover,b,pos_preenchidas)
+
+        finally:
+            sock.close()
+else:
+    while (True):
         coluna, ult_peca, player = escolheColuna(player, ult_peca)
         if coluna < 1 or coluna > COLUNA:
             print("Coluna inexistente, escolha outra.")
             voltar = True
-    else:
-        coluna,ult_peca, player, voltar = escolheColuna_IA(player, ult_peca, voltar,coluna)
-        if player == PECA2:
-            while coluna < 1 or coluna > COLUNA:
-                print("Coluna inexistente, escolha outra.")
-                voltar = True
-                if voltar == True:
-                    coluna, ult_peca, player, voltar = escolheColuna_IA(player, ult_peca, voltar,coluna)
-    pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna, IA,player,VAZIA,voltar)
-    contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna - 1, pos_preenchidas[coluna - 1] + 1, a, contador_gameover, b, pos_preenchidas)
+        else:
+            pos_preenchidas[coluna - 1], voltar = jogar(matriz, pos_preenchidas[coluna - 1], coluna)
+            contador_gameover = fim_de_jogo(matriz, player, COLUNA, LINHA, coluna-1, pos_preenchidas[coluna - 1]+1,a,contador_gameover,b,pos_preenchidas)
