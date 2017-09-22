@@ -15,8 +15,7 @@ a = 0
 b = 0
 contador_gameover = 0
 from random import *
-
-
+import time
 def escolheColuna(player, ult_peca):
     while True:
         if voltar == True:  # Aqui só entra se o usuário digitar uma coluna inválida
@@ -27,8 +26,10 @@ def escolheColuna(player, ult_peca):
         if player == PECA1:  # Aqui entra quando o player é X, ou seja, na primeira rodada do jogo
             try:
                 if resp == 0:
+                    print()
                     coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
                 else:
+                    print()
                     coluna = int(input("Player, escolha a coluna para seu próximo movimento: "))
                 player = PECA2  # Aqui o player muda pra O
                 ult_peca = PECA1  # Aqui é a variável que indica se o último jogador foi X ou O
@@ -37,6 +38,7 @@ def escolheColuna(player, ult_peca):
                 print("coluna invalida, escolha outra")
         else:  # Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
             try:
+                print()
                 coluna = int(input("Player 2, escolha a coluna para seu próximo movimento: "))
                 player = PECA1  # Aqui o player muda pra X
                 ult_peca = PECA2  # Aqui é a variável que indica se o último jogador foi X ou O
@@ -58,15 +60,23 @@ def criarMatriz(matriz, linha):
 
 def jogar(matriz, pos_preenchidas, coluna):
     if pos_preenchidas < 0:
-        if player == PECA1:
+        if IA == 2:
             print("Coluna cheia, escolha outra.")
+        else:
+            if player == PECA2:
+                print("Coluna cheia, escolha outra.")
         voltar = True
     elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
         matriz[pos_preenchidas][coluna - 1] = player
         printar_matriz(LINHA, matriz)
         voltar = False
     else:
-        voltar = False
+        voltar = True
+        while matriz[pos_preenchidas][coluna - 1] == VAZIA:
+            if IA == 1:
+                escolheColuna_IA(player,ult_peca,voltar,coluna)
+            else:
+                escolheColuna(player,ult_peca)
     return pos_preenchidas - 1, voltar
 
 def printar_matriz(LINHA, matriz):
@@ -83,13 +93,14 @@ def printar_matriz(LINHA, matriz):
 def definir_linha():
     while (True):
         try:
-            LINHA = int(
-                input("Digite o numero desejado de linhas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+            print()
+            LINHA = int(input("Digite o numero desejado de linhas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             while (LINHA < 4 or LINHA > 10):
-                LINHA = int(input(
-                    "Numero inválido de linhas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+                print()
+                LINHA = int(input("Numero inválido de linhas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             break
         except ValueError:
+            print()
             print("Numero inválido de linhas, escolha outro. ")
     return LINHA
 
@@ -239,6 +250,7 @@ def escolheColuna_IA(player, ult_peca, voltar,coluna):
             voltar = False
         if player == PECA1:  # Aqui entra quando o player é X, ou seja, na primeira rodada do jogo
             try:
+                print()
                 coluna = int(input("Player 1, escolha a coluna para seu próximo movimento: "))
                 player = PECA2  # Aqui o player muda pra O
                 ult_peca = PECA1 # Aqui é a variável que indica se o último jogador foi X ou O
@@ -249,11 +261,20 @@ def escolheColuna_IA(player, ult_peca, voltar,coluna):
         else:  # Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
             coluna1, cont1 = IA_linha(matriz,player,COLUNA,coluna,pos_preenchidas[coluna-1])
             coluna2, cont2 = IA_coluna(matriz,player,COLUNA,coluna,pos_preenchidas[coluna-1])
+            print()
+            time.sleep(1)
             print("Vez da IA:")
-            if cont1 > cont2:
+            if cont1 > cont2 and cont1<LINHA:
                 coluna = coluna1
-            elif cont2 > cont1:
+            elif cont2 > cont1 and cont2<COLUNA:
                 coluna = coluna2
+            elif cont1>=LINHA and cont2<COLUNA:
+                coluna = coluna2
+            elif cont2>=COLUNA and cont1<LINHA:
+                coluna = coluna1
+            elif cont2>=COLUNA and cont1>=LINHA:
+                print("Empata")
+                quit()
             else:
                 coluna = randrange(1,3)
                 if coluna ==1:
@@ -266,28 +287,22 @@ def escolheColuna_IA(player, ult_peca, voltar,coluna):
         voltar = False
     return coluna, ult_peca, player, voltar
 
-def IA_linha(matriz, player, COLUNA, coluna, pos_preenchidas):
-    menor = 99999
-    list = []
-    x = False
+def IA_linha(matriz, player, COLUNA, coluna, pos_preenchidas1):
+    maior = -1
+    ind = -1
     contlinha_IA = 0
-    coluna_IA = coluna
     try:
         for i in range(COLUNA):  # LINHA
-            if matriz[pos_preenchidas+1][i] == player:
+            if matriz[pos_preenchidas1+1][i] == player:
                 contlinha_IA += 1
     except Exception:
         pass
     for j in range(COLUNA):
-        if matriz[pos_preenchidas+1][j] == VAZIA:
-            list.append(j)
-    for t in (list):
-        a = coluna - t
-        a = abs(a)
-        if a < menor:
-            if matriz[pos_preenchidas+1][t] == VAZIA:
-                menor = t
-    return menor, contlinha_IA
+        if pos_preenchidas[j]>-1 and pos_preenchidas[j]>maior:
+            maior = pos_preenchidas[j]
+            ind = j+1
+
+    return ind, contlinha_IA
 
 def IA_coluna(matriz, player, COLUNA, coluna, pos_preenchidas):
     contlinha_IA = 0
@@ -309,6 +324,7 @@ for i in range(COLUNA):
 printar_matriz(LINHA, matriz)
 while(True):
     try:
+        print()
         resp = int(input("Voce vai jogar online? Digite 1 pra sim e 0 pra nao: "))
         if resp == 1 or resp == 0:
             break
@@ -390,6 +406,7 @@ if resp:
 else:
     while(True):
         try:
+            print()
             IA = int(input("Deseja jogar com a IA ou com 2 players? Digite 1 para a IA e 2 para 2 players: "))
             if IA == 1 or IA == 2:
                 break
