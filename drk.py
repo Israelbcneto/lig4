@@ -351,19 +351,28 @@ while(True):
     except Exception:
         print("Opcao invalida, escolha outra.")
 
-if resp:
-    resp = int(input("Voce vai ser o servidor? Digite 1 pra sim e 0 pra nao: "))
-    if resp:
-        resp = int(input("Digite a porta (4 digitos): "))
+while True:
+    try:
 
-        server_address = ('localhost', resp)
-        sock.bind(server_address)
+        if resp:
+            resp = int(input("Voce vai ser o servidor? Digite 1 pra sim e 0 pra nao: "))
+        break
+    except Exception:
+        pass
+while True:
+    try:
+        if resp:
+            resp = int(input("Digite a porta (4 digitos): "))
 
-        sock.listen(1)
+            server_address = ('localhost', resp)
+            sock.bind(server_address)
 
-        print("Esperando Cliente!")
-        connection, client_address = sock.accept()
+            sock.listen(1)
 
+            print("Esperando Cliente!")
+            connection, client_address = sock.accept()
+    except Exception:
+        pass
         try:
             while True:
                 data = int(connection.recv(32).decode())
