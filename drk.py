@@ -35,6 +35,7 @@ def escolheColuna(player, ult_peca):
                 ult_peca = PECA1  # Aqui é a variável que indica se o último jogador foi X ou O
                 break
             except ValueError:
+                print()
                 print("coluna invalida, escolha outra")
         else:  # Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
             try:
@@ -44,6 +45,7 @@ def escolheColuna(player, ult_peca):
                 ult_peca = PECA2  # Aqui é a variável que indica se o último jogador foi X ou O
                 break
             except ValueError:
+                print()
                 print("coluna invalida, escolha outra")
 
     return coluna, ult_peca, player
@@ -61,9 +63,11 @@ def criarMatriz(matriz, linha):
 def jogar(matriz, pos_preenchidas, coluna):
     if pos_preenchidas < 0:
         if IA == 2:
+            print()
             print("Coluna cheia, escolha outra.")
         else:
             if player == PECA2:
+                print()
                 print("Coluna cheia, escolha outra.")
         voltar = True
     elif matriz[pos_preenchidas][coluna - 1] == VAZIA:
@@ -108,13 +112,14 @@ def definir_linha():
 def definir_coluna():
     while (True):
         try:
-            COLUNA = int(
-                input("Digite o numero desejado de colunas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+            print()
+            COLUNA = int(input("Digite o numero desejado de colunas (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             while (COLUNA < 4 or COLUNA > 10):
-                COLUNA = int(input(
-                    "Numero inválido de colunas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
+                print()
+                COLUNA = int(input("Numero inválido de colunas, escolha outro (sendo ele maior ou igual a 4 e menor ou igual a 10): "))
             break
         except ValueError:
+            print()
             print("Numero inválido de colunas, escolha outro. ")
     return COLUNA
 
@@ -138,8 +143,10 @@ def FUNCAO_LINHA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, contado
                 contador_gameover = 0
             if contador_gameover == 4:
                 if player == PECA2:
+                    print()
                     print("Player 1 ganhou o jogo!")
                 else:
+                    print()
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
@@ -154,8 +161,10 @@ def FUNCAO_COLUNA(matriz, player, COLUNA, LINHA, coluna, pos_preenchidas, contad
                 contador_gameover = 0
             if contador_gameover == 4:
                 if player == PECA2:
+                    print()
                     print("Player 1 ganhou o jogo!")
                 else:
+                    print()
                     print("Player 2 ganhou o jogo!")
                 quit()
         contador_gameover = 0
@@ -189,8 +198,10 @@ def DIAGONAL_SUPERIOR_ESQUERDA(matriz, player, COLUNA, LINHA, coluna, pos_preenc
         pass
     if contador_gameover == 3:
         if player == PECA2:
+            print()
             print("Player 1 ganhou o jogo!")
         else:
+            print()
             print("Player 2 ganhou o jogo!")
         quit()
 
@@ -225,8 +236,10 @@ def DIAGONAL_INFERIOR_ESQUERDA(matriz, player, COLUNA, LINHA, coluna, pos_preenc
         pass
     if contador_gameover == 3:
         if player == PECA2:
+            print()
             print("Player 1 ganhou o jogo!")
         else:
+            print()
             print("Player 2 ganhou o jogo!")
         quit()
 
@@ -237,6 +250,7 @@ def EMPATE(COLUNA, preenchimento):
         if i < 0:
             cont += 1
         if cont == COLUNA:
+            print()
             print("Empatou!!")
             quit()
 
@@ -257,6 +271,7 @@ def escolheColuna_IA(player, ult_peca, voltar,coluna):
                 voltar = False
                 break
             except ValueError:
+                print()
                 print("Coluna invalida, escolha outra")
         else:  # Aqui entra quando o player é O, ou seja, na segunda rodada do jogo
             coluna1, cont1 = IA_linha(matriz,player,COLUNA,coluna,pos_preenchidas[coluna-1])
@@ -273,14 +288,17 @@ def escolheColuna_IA(player, ult_peca, voltar,coluna):
             elif cont2>=COLUNA and cont1<LINHA:
                 coluna = coluna1
             elif cont2>=COLUNA and cont1>=LINHA:
-                print("Empata")
+                print()
+                print("Empatou!!!")
                 quit()
             else:
                 coluna = randrange(1,3)
-                if coluna ==1:
+                if coluna == 1:
                     coluna = coluna1
                 else:
                     coluna = coluna2
+            while pos_preenchidas[coluna-1] <= -1:
+                coluna = randrange(1,COLUNA+1)
             player = PECA1  # Aqui o player muda pra X
             ult_peca = PECA2  # Aqui é a variável que indica se o último jogador foi X ou O
             break
@@ -411,8 +429,10 @@ else:
             if IA == 1 or IA == 2:
                 break
             else:
+                print()
                 print("Opcao invalida, escolha outra.")
         except Exception:
+            print()
             print("Opcao invalida, escolha outra.")
     while (True):
         if IA == 2:
@@ -422,6 +442,7 @@ else:
         while (True):
             if coluna < 1 or coluna > COLUNA:
                 if (IA == 2) or (IA == 1 and player == PECA2):
+                    print()
                     print("Coluna inexistente, escolha outra.")
                     voltar = True
                 if IA == 2:
